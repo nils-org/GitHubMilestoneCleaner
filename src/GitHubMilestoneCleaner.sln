@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubBumpVersionCleaner", "GitHubBumpVersionCleaner\GitHubBumpVersionCleaner.csproj", "{26124460-67B8-4A9D-B5E3-ABC422405C7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubMilestoneCleaner", "GitHubMilestoneCleaner\GitHubMilestoneCleaner.csproj", "{26124460-67B8-4A9D-B5E3-ABC422405C7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

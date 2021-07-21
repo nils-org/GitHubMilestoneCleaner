@@ -6,7 +6,7 @@ using Octokit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace GitHubBumpVersionCleaner.Commands
+namespace GitHubMilestoneCleaner.Commands
 {
     internal sealed class AutoCleanupCommand : AsyncCommand<AutoCleanupCommand.Settings>
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using Octokit;
 
-namespace GitHubBumpVersionCleaner
+namespace GitHubMilestoneCleaner
 {
     internal static class IssueExtensions
     {

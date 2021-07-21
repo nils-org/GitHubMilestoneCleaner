@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Octokit;
 using Spectre.Console;
 
-namespace GitHubBumpVersionCleaner
+namespace GitHubMilestoneCleaner
 {
     public class GitHubAdapter
     {

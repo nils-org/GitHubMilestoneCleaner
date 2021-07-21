@@ -1,7 +1,7 @@
-﻿using GitHubBumpVersionCleaner.Commands;
+﻿using GitHubMilestoneCleaner.Commands;
 using Spectre.Console.Cli;
 
-namespace GitHubBumpVersionCleaner
+namespace GitHubMilestoneCleaner
 {
     class Program
     {

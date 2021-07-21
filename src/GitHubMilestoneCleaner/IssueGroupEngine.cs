@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Octokit;
 
-namespace GitHubBumpVersionCleaner
+namespace GitHubMilestoneCleaner
 {
     public class IssueGroupEngine
     {

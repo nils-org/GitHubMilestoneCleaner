@@ -2,7 +2,7 @@
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace GitHubBumpVersionCleaner.Commands
+namespace GitHubMilestoneCleaner.Commands
 {
     public class CommonCommandSettings : CommandSettings
     {
