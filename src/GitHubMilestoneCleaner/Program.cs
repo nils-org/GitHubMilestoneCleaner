@@ -10,14 +10,9 @@ namespace GitHubMilestoneCleaner
             var app = new CommandApp();
             app.Configure(c =>
             {
-                c.AddCommand<ListCommand>("list")
-                    .WithDescription("List issues that could be removed from the milestone.");
-                c.AddCommand<InteractiveCommand>("interactive")
-                    .WithDescription("Interactively list and select issues to be removed from the milestone.")
-                    .WithExample(new []{"interactive", "-o <owner>", "-r <repo>", "-t <PAT>", "-m <milestone>"});
-                c.AddCommand<AutoCleanupCommand>("autoclean")
-                    .WithAlias("auto-clean")
-                    .WithDescription("Automatically clean issues in the milestone.");
+                c.AddCommand<CleanVersionBumpsCommand>("version-bumps")
+                    .WithAlias("versionbumps")
+                    .WithDescription("Cleans multiple version bumps per library as are created by dependabot or renovate.");
 #if DEBUG
                 c.ValidateExamples();
                 c.PropagateExceptions();

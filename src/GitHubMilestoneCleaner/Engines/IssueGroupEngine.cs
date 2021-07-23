@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Octokit;
 
-namespace GitHubMilestoneCleaner
+namespace GitHubMilestoneCleaner.Engines
 {
     public class IssueGroupEngine
     {
@@ -23,7 +23,10 @@ namespace GitHubMilestoneCleaner
                 .GroupBy(x => x.VersionAgnosticName)
                 .Select(x =>
                 {
-                    var issuesInGroup = x.ToList().OrderByDescending(y => y.Issue.Number);
+                    var issuesInGroup = 
+                        x.ToList()
+                            .OrderByDescending(y => y.Issue.Number)
+                            .ToList();
                     var main = issuesInGroup.First();
                     var subIssues = issuesInGroup.Skip(1).Select(y => y.Issue).ToList();
 
@@ -38,9 +41,9 @@ namespace GitHubMilestoneCleaner
 
         public class IssueGroup
         {
-            public string MatchKey { get; init; }
-            public Issue MainIssue { get; init; }
-            public IEnumerable<Issue> SubIssues { get; init; }
+            public string MatchKey { get; set; }
+            public Issue MainIssue { get; set; }
+            public IEnumerable<Issue> SubIssues { get; set; }
         }
     }
 }
