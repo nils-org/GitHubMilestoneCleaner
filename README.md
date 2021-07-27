@@ -20,13 +20,13 @@
 
 ## Install
 
-```cmd
+```pwsh
 dotnet tool install -g GitHubMilestoneCleaner
 ```
 
 ## Usage
 
-```ps
+```pwsh
 dotnet gh-milestone-cleaner --help
 ```
 
@@ -37,8 +37,8 @@ bumped multiple times between releases. For clarity each release/milestone shoul
 the latest/newest release. The `version-bumps` command is used to cleanup multiple bumps of the
 same dependency.
 
-```ps
-dotnet gh-milestone-cleaner version-bumps -o cake-build -r cake-rider -m 2.0.0 -i -t <token>
+```pwsh
+dotnet gh-milestone-cleaner version-bumps -o cake-build -r cake-rider -m 2.0.0 -i -t "some-token"
 ```
 
 ## Maintainer

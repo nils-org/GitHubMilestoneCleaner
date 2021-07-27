@@ -8,8 +8,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)/../../README.md" PackagePath="" Pack="true" />
+    <None Include="$(MSBuildProjectDirectory)/../../res/logo/logo-128.png" PackagePath="" Pack="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <StartYear>2021</StartYear>
+    <EndYear>$([System.DateTime]::Today.Year)</EndYear>
+    <FullYear Condition="'$(StartYear)'=='$(EndYear)'">$(StartYear)</FullYear>
+    <FullYear Condition="'$(StartYear)'!='$(EndYear)'">$(StartYear)-$(EndYear)</FullYear>
+
+    <!-- Properties related to packaging -->
+    <Authors>Nils Andresen</Authors>
+    <Copyright>Copyright © $(FullYear) — Nils Andresen</Copyright>
+    <Description>.NET tool to clean GitHub milestones before doing a release.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nils-org/GitHubMilestoneCleaner</PackageProjectUrl>
+    <PackageTags>java;versions;tool</PackageTags>
+    <RepositoryUrl>https://github.com/nils-org/GitHubMilestoneCleaner.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/nils-org/GitHubMilestoneCleaner/releases</PackageReleaseNotes>
+    <Version>0.0.1</Version>
+    <PackageDescription>.NET tool to clean GitHub milestones before doing a release.</PackageDescription>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIconUrl>https://cdn.jsdelivr.net/gh/nils-org/GitHubMilestoneCleaner@main/res/logo/logo-128.png</PackageIconUrl>
+    <PackageIcon>logo-128.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="Spectre.Console" Version="0.41.0" />
   </ItemGroup>
-
 </Project>
