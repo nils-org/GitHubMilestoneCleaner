@@ -24,7 +24,8 @@ jobs:
     env:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
-      GPR_API_KEY: ${{ secrets.GPR_API_KEY }}
+      GPR_USER: ${{ secrets.GPR_USER }}
+      GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
       GPR_SOURCE: "https://nuget.pkg.github.com/nils-org/index.json"
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       NUGET_SOURCE: "https://api.nuget.org/v3/index.json"
