@@ -1,27 +1,28 @@
 ﻿using System.ComponentModel;
+using JetBrains.Annotations;
 using Spectre.Console;
 using Spectre.Console.Cli;
-// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace GitHubMilestoneCleaner.Commands;
 
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class CommonCommandSettings : CommandSettings
 {
     [Description("Owner of the repository.")]
     [CommandOption("-o|--owner")]
-    public string Owner { get; set; }
+    public string Owner { get; set; } = string.Empty;
 
     [Description("Repository name.")]
     [CommandOption("-r|--repository")] 
-    public string Repository { get; set; }
+    public string Repository { get; set; } = string.Empty;
 
     [Description("Token (PAT) used to access the repository.")]
     [CommandOption("-t|--token")] 
-    public string Token { get; set; }
+    public string Token { get; set; } = string.Empty;
 
     [Description("Milestone to clean.")]
     [CommandOption("-m|--milestone")] 
-    public string Milestone { get; set; }
+    public string Milestone { get; set; } = string.Empty;
             
     [Description("Include closed milestones. Default is to search only in open milestones.")]
     [CommandOption("-c|--closed")]

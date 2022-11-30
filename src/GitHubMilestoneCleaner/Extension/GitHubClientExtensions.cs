@@ -52,7 +52,7 @@ public static class GitHubClientExtensions
             { CancellationTokenSourceKey, cancellationTokenSource }, 
         };
         return await Retry.ExecuteAsync(
-            async (ctx, _) => await operation(trappedClient),
+            async (_, _) => await operation(trappedClient),
             policyContext,
             cancellationTokenSource.Token);
     }

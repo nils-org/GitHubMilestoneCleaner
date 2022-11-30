@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GitHubMilestoneCleaner.Engines;
+using GitHubMilestoneCleaner.Extension;
+using JetBrains.Annotations;
 using Octokit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace GitHubMilestoneCleaner.Commands;
 
+[UsedImplicitly]
 internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsCommand.Settings>
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public sealed class Settings : CommonCommandSettings
     {
         [Description("Interactively select which issues to remove from the milestone.")]
@@ -37,7 +40,7 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         return CommonCommandSettings.Validate(context, settings);
     }
 
-    public override async Task<int> ExecuteAsync([NotNull] CommandContext context, [NotNull] Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var adapter = new GitHubAdapter(settings.Token);
         Repository repo;
@@ -96,7 +99,7 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
                 }
             }
 
-            AnsiConsole.Render(tree);
+            AnsiConsole.Write(tree);
         }
 
         if (!toRemove.Any())
