@@ -3,97 +3,105 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using GitHubMilestoneCleaner.Extension;
 using Octokit;
 using Spectre.Console;
 
-namespace GitHubMilestoneCleaner
+namespace GitHubMilestoneCleaner;
+
+public class GitHubAdapter
 {
-    public class GitHubAdapter
+    private readonly GitHubClient _client;
+
+    public GitHubAdapter(string token)
     {
-        private readonly GitHubClient _client;
-
-        public GitHubAdapter(string token)
+        _client = new GitHubClient(new ProductHeaderValue(GetAppName()))
         {
-            _client = new GitHubClient(new ProductHeaderValue(GetAppName()))
-            {
-                Credentials = new Credentials(token)
-            };
-        }
+            Credentials = new Credentials(token),
+        };
+    }
         
-        public async Task<Repository> GetRepository(
-            string owner, 
-            string name)
+    public async Task<Repository> GetRepository(
+        string owner, 
+        string name)
+    {
+        try
         {
-            try
-            {
-                return await _client.Repository.Get(owner, name);
-            }
-            catch (Exception e)
-            {
-                // probably no unauthorized or something like that.
-                AnsiConsole.MarkupLine($"[red]{e.Message}[/]");
-                throw new ExecutionAbortedException(1);
-            }
+            return await _client.Repository.Get(owner, name);
+        }
+        catch (Exception e)
+        {
+            // probably no unauthorized or something like that.
+            AnsiConsole.MarkupLine($"[red]{e.Message}[/]");
+            throw new ExecutionAbortedException(1);
+        }
+    }
+
+    public async Task<Milestone> GetMilestone(Repository repo, string name, bool searchClosedMilestones)
+    {
+        var milestoneRequest = new MilestoneRequest
+        {
+            State = searchClosedMilestones ? ItemStateFilter.All : ItemStateFilter.Open 
+        };
+        var milestones = await _client.Issue.Milestone.GetAllForRepository(repo.Id, milestoneRequest);
+        var milestone = milestones.FirstOrDefault(x =>
+            x.Title.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+        if (milestone == null)
+        {
+            AnsiConsole.MarkupLine("[red]Could not find milestone.[/]");
+            throw new ExecutionAbortedException(2);
         }
 
-        public async Task<Milestone> GetMilestone(Repository repo, string name, bool searchClosedMilestones)
-        {
-            var milestoneRequest = new MilestoneRequest
-            {
-                State = searchClosedMilestones ? ItemStateFilter.All : ItemStateFilter.Open 
-            };
-            var milestones = await _client.Issue.Milestone.GetAllForRepository(repo.Id, milestoneRequest);
-            var milestone = milestones.FirstOrDefault(x =>
-                x.Title.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-            if (milestone == null)
-            {
-                AnsiConsole.MarkupLine("[red]Could not find milestone.[/]");
-                throw new ExecutionAbortedException(2);
-            }
-
-            return milestone;
-        }
+        return milestone;
+    }
         
-        public async Task<IEnumerable<Issue>> GetIssuesInMileStone(Repository repo, Milestone milestone)
+    public async Task<IEnumerable<Issue>> GetIssuesInMileStone(Repository repo, Milestone milestone)
+    {
+        var issueRequest = new RepositoryIssueRequest
         {
-            var issueRequest = new RepositoryIssueRequest
-            {
-                Filter = IssueFilter.All,
-                State = ItemStateFilter.All,
-                Milestone = milestone.Number.ToString(CultureInfo.InvariantCulture)
-            };
-            var issues = 
-                await _client.Issue.GetAllForRepository(repo.Id, issueRequest);
+            Filter = IssueFilter.All,
+            State = ItemStateFilter.All,
+            Milestone = milestone.Number.ToString(CultureInfo.InvariantCulture)
+        };
+        var issues = 
+            await _client.WithRetry(c => c.Issue.GetAllForRepository(repo.Id, issueRequest));
 
-            return issues;
+        return issues;
+    }
+
+    public async Task RemoveMilestone(
+        Repository repo,
+        Issue issue,
+        string? comment)
+    {
+        if (!string.IsNullOrEmpty(comment))
+        {
+            await _client.WithRetry(c => 
+                c.Issue.Comment.Create(
+                    repo.Id,
+                    issue.Number,
+                    comment));
         }
 
-        public async Task RemoveMilestone(Repository repo, IEnumerable<Issue> issues)
-        {
-            foreach (var issue in issues)
-            {
-                var update = issue.ToUpdate();
-                update.Milestone = null;
-                // TODO: What about timeouts,
-                await _client.Issue.Update(repo.Id, issue.Number, update);
-            }
-        }
+        var update = issue.ToUpdate();
+        update.Milestone = null;
+        await _client.WithRetry(c => c.Issue.Update(repo.Id, issue.Number, update));
+    }
 
-        public class ExecutionAbortedException : Exception
-        {
-            public int Reason { get; }
+    public class ExecutionAbortedException : Exception
+    {
+        public int Reason { get; }
 
-            public ExecutionAbortedException(int reason)
-            {
-                Reason = reason;
-            }
-        }
-
-        private string GetAppName()
+        public ExecutionAbortedException(int reason)
         {
-            var name = GetType().Assembly.GetName();
-            return $"{name.Name}-{name.Version}";
+            Reason = reason;
         }
+    }
+
+    private string GetAppName()
+    {
+        var name = GetType().Assembly.GetName();
+        return $"{name.Name}-{name.Version}";
     }
 }

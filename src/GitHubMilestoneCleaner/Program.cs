@@ -1,24 +1,29 @@
 ﻿using GitHubMilestoneCleaner.Commands;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace GitHubMilestoneCleaner
+namespace GitHubMilestoneCleaner;
+
+class Program
 {
-    class Program
+    static int Main(string[] args)
     {
-        static int Main(string[] args)
+        var app = new CommandApp();
+        app.Configure(c =>
         {
-            var app = new CommandApp();
-            app.Configure(c =>
-            {
-                c.AddCommand<CleanVersionBumpsCommand>("version-bumps")
-                    .WithAlias("versionbumps")
-                    .WithDescription("Cleans multiple version bumps per library as are created by dependabot or renovate.");
+            c.SetExceptionHandler(ex =>
+                {
+                    AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
+                    return -99;
+                })
+                .AddCommand<CleanVersionBumpsCommand>("version-bumps")
+                .WithAlias("versionbumps")
+                .WithDescription(
+                    "Cleans multiple version bumps per library as are created by dependabot or renovate.");
 #if DEBUG
-                c.ValidateExamples();
-                c.PropagateExceptions();
+            c.ValidateExamples();
 #endif
-            });
-            return app.Run(args);
-        }
+        });
+        return app.Run(args);
     }
 }

@@ -11,11 +11,10 @@
 
 - [Install](#install)
 - [Usage](#usage)
-  - [Changes to the system](#changes-to-the-system)
-- [Discussion](#discussion)
+  - [Available Commands](#commands)
+    - [version-bumps](#version-bumps)
 - [Maintainer](#maintainer)
 - [Contributing](#contributing)
-  - [Contributors](#contributors)
 - [License](#license)
 
 ## Install
@@ -26,19 +25,46 @@ dotnet tool install -g GitHubMilestoneCleaner
 
 ## Usage
 
-```pwsh
+Get Help
+```ps
 dotnet gh-milestone-cleaner --help
 ```
 
-### Clean version bumps in a milestone
+### Commands
+
+#### `version-bumps`
+
+> Clean version bumps in a milestone
 
 When dependabot or renovate are activated in a project it is possible that the same dependency is
 bumped multiple times between releases. For clarity each release/milestone should contain only
 the latest/newest release. The `version-bumps` command is used to cleanup multiple bumps of the
 same dependency.
 
-```pwsh
-dotnet gh-milestone-cleaner version-bumps -o cake-build -r cake-rider -m 2.0.0 -i -t "some-token"
+**Example:**
+Silently remove all issues from the milestone, that are detected
+as version bumps and have newer versions.
+
+```ps
+dotnet gh-milestone-cleaner version-bumps `
+   -o [owner] `
+   -r [repo-name] `
+   -t [token] `
+   -m [milestone] ` 
+   -q
+```
+
+**Example:**
+Interactively remove some issues from a milestone.
+
+```ps
+dotnet gh-milestone-cleaner version-bumps `
+  -o cake-build `
+  -r cake-rider `
+  -t "my-secure-token" `
+  -m 2.0.0 `
+  -s "manually removed" `
+  -i "manually removed"
 ```
 
 ## Maintainer
