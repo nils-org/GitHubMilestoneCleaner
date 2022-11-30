@@ -5,6 +5,7 @@
     <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-gh-milestone-cleaner</ToolCommandName>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +37,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="Spectre.Console" Version="0.41.0" />
+    <PackageReference Include="Octokit" Version="4.0.2" />
+    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="Spectre.Console" Version="0.45.1-preview.0.43" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.45.1-preview.0.43" />
   </ItemGroup>
 </Project>
