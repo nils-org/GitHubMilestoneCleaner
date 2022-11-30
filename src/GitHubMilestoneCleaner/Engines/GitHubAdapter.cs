@@ -7,7 +7,7 @@ using GitHubMilestoneCleaner.Extension;
 using Octokit;
 using Spectre.Console;
 
-namespace GitHubMilestoneCleaner;
+namespace GitHubMilestoneCleaner.Engines;
 
 public class GitHubAdapter
 {

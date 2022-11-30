@@ -2,11 +2,11 @@
 using System.Linq;
 using Octokit;
 
-namespace GitHubMilestoneCleaner;
+namespace GitHubMilestoneCleaner.Extension;
 
 internal static class IssueExtensions
 {
-    internal static string GetWebUrl(this Issue issue)
+    private static string GetWebUrl(this Issue issue)
     {
         // issue.url points to json data
         var url = issue.Url

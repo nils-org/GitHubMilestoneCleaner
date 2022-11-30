@@ -39,10 +39,10 @@ public class IssueGroupEngine
             });
     }
 
-    public class IssueGroup
+    public record IssueGroup
     {
-        public string MatchKey { get; set; }
-        public Issue MainIssue { get; set; }
-        public IEnumerable<Issue> SubIssues { get; set; }
+        public string MatchKey { get; init; } = default!;
+        public Issue MainIssue { get; init; } = default!;
+        public IEnumerable<Issue> SubIssues { get; init; } = default!;
     }
 }
