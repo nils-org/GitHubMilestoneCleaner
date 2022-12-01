@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotnet-gh-milestone-cleaner</ToolCommandName>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)/../../README.md" PackagePath="" Pack="true" />
+    <None Include="$(MSBuildProjectDirectory)/../../res/logo/logo-128.png" PackagePath="" Pack="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <StartYear>2021</StartYear>
+    <EndYear>$([System.DateTime]::Today.Year)</EndYear>
+    <FullYear Condition="'$(StartYear)'=='$(EndYear)'">$(StartYear)</FullYear>
+    <FullYear Condition="'$(StartYear)'!='$(EndYear)'">$(StartYear)-$(EndYear)</FullYear>
+
+    <!-- Properties related to packaging -->
+    <Authors>Nils Andresen</Authors>
+    <Copyright>Copyright © $(FullYear) — Nils Andresen</Copyright>
+    <Description>.NET tool to clean GitHub milestones before doing a release.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nils-org/GitHubMilestoneCleaner</PackageProjectUrl>
+    <PackageTags>java;versions;tool</PackageTags>
+    <RepositoryUrl>https://github.com/nils-org/GitHubMilestoneCleaner.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/nils-org/GitHubMilestoneCleaner/releases</PackageReleaseNotes>
+    <Version>0.0.1</Version>
+    <PackageDescription>.NET tool to clean GitHub milestones before doing a release.</PackageDescription>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIconUrl>https://cdn.jsdelivr.net/gh/nils-org/GitHubMilestoneCleaner@main/res/logo/logo-128.png</PackageIconUrl>
+    <PackageIcon>logo-128.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+    <PackageReference Include="Octokit" Version="4.0.2" />
+    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="Spectre.Console" Version="0.45.1-preview.0.43" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.45.1-preview.0.43" />
+  </ItemGroup>
+</Project>
