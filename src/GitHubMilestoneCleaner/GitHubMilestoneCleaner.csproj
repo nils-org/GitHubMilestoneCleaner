@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-    <PackageReference Include="Octokit" Version="8.0.1" />
+    <PackageReference Include="Octokit" Version="8.1.1" />
     <PackageReference Include="Polly" Version="8.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.47.0" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
