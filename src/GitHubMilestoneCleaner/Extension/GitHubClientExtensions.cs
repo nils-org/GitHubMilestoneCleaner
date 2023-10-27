@@ -31,7 +31,7 @@ public static class GitHubClientExtensions
 
                     return TimeSpan.FromSeconds(secondsToWait);
                 },
-                async (ex, _, _, ctx) =>
+                (ex, _, _, ctx) =>
                 {
                     var cancellationTokenSource = (CancellationTokenSource)ctx[CancellationTokenSourceKey];
                     if (ex is Octokit.NotFoundException)
@@ -39,6 +39,8 @@ public static class GitHubClientExtensions
                         AnsiConsole.MarkupLine($"[red]{ex.GetType().Name}: {ex.Message}[/]");
                         cancellationTokenSource.Cancel();
                     }
+
+                    return Task.CompletedTask;
                 });
         
     public static async Task<T> WithRetry<T>(
