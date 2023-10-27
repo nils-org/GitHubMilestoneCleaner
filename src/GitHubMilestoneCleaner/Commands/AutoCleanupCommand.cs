@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -113,16 +114,41 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
             return 0;
         }
 
-        foreach (var issue in toRemove)
+        async Task DoRemove(Action? callback = null)
         {
-            var group = grouped.First(g => g.MainIssue.Id == issue.Id || g.SubIssues.Any(i => i.Id == issue.Id));
-            var comment = issue == group.MainIssue ? settings.TopIssueComment : settings.SubIssueComment;
-            if (!string.IsNullOrEmpty(comment))
+            foreach (var issue in toRemove)
             {
-                comment = string.Format(comment, group.MainIssue.HtmlUrl);
-            }
+                var group = grouped.First(g => g.MainIssue.Id == issue.Id || g.SubIssues.Any(i => i.Id == issue.Id));
+                var comment = issue == group.MainIssue ? settings.TopIssueComment : settings.SubIssueComment;
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    comment = string.Format(comment, group.MainIssue.HtmlUrl);
+                }
 
-            await adapter.RemoveMilestone(repo, issue, comment);
+                await adapter.RemoveMilestone(repo, issue, comment);
+                callback?.Invoke();
+            }
+        }
+        
+        if (settings.NonInteractive)
+        {
+            await DoRemove();
+        }
+        else
+        {
+            await AnsiConsole.Progress()
+                .StartAsync(async ctx =>
+                {
+                    var inc = 100d / toRemove.Count;
+                    var task = ctx.AddTask($"Cleaning {toRemove.Count} issues");
+                    await DoRemove(() =>
+                    {
+                        task.Increment(inc);
+                    });
+
+                    var rest = 100 - task.Percentage;
+                    task.Increment(rest);
+                });
         }
 
         return 0;

@@ -8,17 +8,27 @@ namespace GitHubMilestoneCleaner.Engines;
 public class IssueGroupEngine
 {
     private  readonly Regex _versionMatcher =
-        new Regex(
-            @"(0|[1-9]\d*)(\.(0|[1-9]\d*))+(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?");
+        new(
+            @"\s*(from|to) v?(0|[1-9]\d*)(\.(0|[1-9]\d*))+(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?");
+    private  readonly Regex _digestMatcher = new(@"\s*digest to [0-9a-fA-F]+$");
+
         
     public IEnumerable<IssueGroup> GroupIssues(IEnumerable<Issue> issues)
     {
-
+        var matchers = new[]
+        {
+            _versionMatcher,
+            _digestMatcher
+        };
+        
         return issues
             .Select(x => new
             {
                 Issue = x,
-                VersionAgnosticName = _versionMatcher.Replace(x.Title, string.Empty)
+                VersionAgnosticName = (matchers
+                    .FirstOrDefault(m => m.IsMatch(x.Title))?
+                    .Replace(x.Title, string.Empty) ?? x.Title)
+                    .TrimEnd(),
             })
             .GroupBy(x => x.VersionAgnosticName)
             .Select(x =>
