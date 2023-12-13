@@ -13,7 +13,7 @@ public class IssueGroupEngine
     private  readonly Regex _digestMatcher = new(@"\s*digest to [0-9a-fA-F]+$");
 
         
-    public IEnumerable<IssueGroup> GroupIssues(IEnumerable<Issue> issues)
+    public IEnumerable<IssueGroup> GroupIssues(IEnumerable<IIssueWrapper> issues)
     {
         var matchers = new[]
         {
@@ -52,7 +52,14 @@ public class IssueGroupEngine
     public record IssueGroup
     {
         public string MatchKey { get; init; } = default!;
-        public Issue MainIssue { get; init; } = default!;
-        public IEnumerable<Issue> SubIssues { get; init; } = default!;
+        public IIssueWrapper MainIssue { get; init; } = default!;
+        public IEnumerable<IIssueWrapper> SubIssues { get; init; } = default!;
+    }
+
+    public interface IIssueWrapper
+    {
+        string Title { get; }
+        int Number { get; }
+        Issue BackingIssue { get; }
     }
 }

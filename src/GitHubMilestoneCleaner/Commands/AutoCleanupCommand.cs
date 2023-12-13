@@ -59,12 +59,12 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         }
 
         var groupEngine = new IssueGroupEngine();
-        var grouped = groupEngine.GroupIssues(issues).ToList();
-        var toRemove = new List<Issue>();
+        var grouped = groupEngine.GroupIssues(issues.Select(x => new IssueWrapper(x))).ToList();
+        var toRemove = new List<IssueGroupEngine.IIssueWrapper>();
 
         if (!settings.NonInteractive)
         {
-            var prompt = new MultiSelectionPrompt<Issue>
+            var prompt = new MultiSelectionPrompt<IssueGroupEngine.IIssueWrapper>
             {
                 Converter = IssueExtensions.ToMarkup,
                 PageSize = 25,
@@ -118,14 +118,16 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         {
             foreach (var issue in toRemove)
             {
-                var group = grouped.First(g => g.MainIssue.Id == issue.Id || g.SubIssues.Any(i => i.Id == issue.Id));
+                var group = grouped.First(g => 
+                    g.MainIssue.BackingIssue.Id == issue.BackingIssue.Id 
+                    || g.SubIssues.Any(i => i.BackingIssue.Id == issue.BackingIssue.Id));
                 var comment = issue == group.MainIssue ? settings.TopIssueComment : settings.SubIssueComment;
                 if (!string.IsNullOrEmpty(comment))
                 {
-                    comment = string.Format(comment, group.MainIssue.HtmlUrl);
+                    comment = string.Format(comment, group.MainIssue.BackingIssue.HtmlUrl);
                 }
 
-                await adapter.RemoveMilestone(repo, issue, comment);
+                await adapter.RemoveMilestone(repo, issue.BackingIssue, comment);
                 callback?.Invoke();
             }
         }
@@ -152,5 +154,17 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         }
 
         return 0;
+    }
+    
+    private class IssueWrapper : IssueGroupEngine.IIssueWrapper
+    {
+        public IssueWrapper(Issue issue)
+        {
+            BackingIssue = issue;
+        }
+
+        public string Title => BackingIssue.Title;
+        public int Number => BackingIssue.Number;
+        public Issue BackingIssue { get; }
     }
 }
