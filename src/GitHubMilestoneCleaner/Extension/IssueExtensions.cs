@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GitHubMilestoneCleaner.Engines;
 using Octokit;
 
 namespace GitHubMilestoneCleaner.Extension;
@@ -15,17 +16,17 @@ internal static class IssueExtensions
         return url;
     }
         
-    internal static string ToMarkup(this Issue issue)
+    internal static string ToMarkup(this IssueGroupEngine.IIssueWrapper issue)
     {
-        return $"[link={issue.GetWebUrl()}][green](#{issue.Number})[/] [yellow]{issue.Title}[/][/]";
+        return $"[link={issue.BackingIssue.GetWebUrl()}][green](#{issue.Number})[/] [yellow]{issue.Title}[/][/]";
     }
         
-    internal static string ToShortMarkup(this Issue issue)
+    internal static string ToShortMarkup(this IssueGroupEngine.IIssueWrapper issue)
     {
-        return $"[link={issue.GetWebUrl()}]#{issue.Number}[/]";
+        return $"[link={issue.BackingIssue.GetWebUrl()}]#{issue.Number}[/]";
     }
 
-    internal static string ToShortMarkup(this IEnumerable<Issue> issues)
+    internal static string ToShortMarkup(this IEnumerable<IssueGroupEngine.IIssueWrapper> issues)
     {
         return string.Join(
             ", ", 

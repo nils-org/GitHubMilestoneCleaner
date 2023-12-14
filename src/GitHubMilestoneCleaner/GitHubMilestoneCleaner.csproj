@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-gh-milestone-cleaner</ToolCommandName>
     <LangVersion>latest</LangVersion>
@@ -38,10 +38,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-    <PackageReference Include="Octokit" Version="8.1.1" />
-    <PackageReference Include="Polly" Version="8.0.0" />
-    <PackageReference Include="Spectre.Console" Version="0.47.0" />
-    <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+    <PackageReference Include="Octokit" Version="9.0.0" />
+    <PackageReference Include="Polly" Version="8.2.0" />
+    <PackageReference Include="Spectre.Console" Version="0.48.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.48.0" />
   </ItemGroup>
 </Project>
