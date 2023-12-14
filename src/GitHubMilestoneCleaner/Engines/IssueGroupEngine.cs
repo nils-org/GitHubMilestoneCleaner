@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 using Octokit;
 
 namespace GitHubMilestoneCleaner.Engines;
@@ -9,7 +10,7 @@ public class IssueGroupEngine
 {
     private  readonly Regex _versionMatcher =
         new(
-            @"\s*(from|to) v?(0|[1-9]\d*)(\.(0|[1-9]\d*))+(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?");
+            @"\s*(from|to) v?(0|[1-9]\d*)(\.(0|[1-9]\d*))*(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?");
     private  readonly Regex _digestMatcher = new(@"\s*digest to [0-9a-fA-F]+$");
 
         
@@ -26,9 +27,15 @@ public class IssueGroupEngine
             {
                 Issue = x,
                 VersionAgnosticName = (matchers
-                    .FirstOrDefault(m => m.IsMatch(x.Title))?
-                    .Replace(x.Title, string.Empty) ?? x.Title)
-                    .TrimEnd(),
+                    .Select(m => new
+                    {
+                        Matcher = m,
+                        Matches = m.Matches(x.Title)
+                    })
+                    .Where(y => y.Matches.Count > 0)
+                    .MaxBy(m => m.Matches[0].Length)? // Really, the longest match is always the best??
+                    .Matcher.Replace(x.Title, string.Empty) ?? x.Title)
+                    .Trim(),
             })
             .GroupBy(x => x.VersionAgnosticName)
             .Select(x =>
