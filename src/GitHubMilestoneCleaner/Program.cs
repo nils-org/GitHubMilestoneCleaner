@@ -5,7 +5,7 @@ using Spectre.Console.Cli;
 var app = new CommandApp();
 app.Configure(c =>
 {
-    c.SetExceptionHandler(ex =>
+    c.SetExceptionHandler((ex, _) =>
         {
             AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
             return -99;
