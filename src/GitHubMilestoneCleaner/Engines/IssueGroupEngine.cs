@@ -66,7 +66,7 @@ public class IssueGroupEngine
     public interface IIssueWrapper
     {
         string Title { get; }
-        int Number { get; }
+        long Number { get; }
         Issue BackingIssue { get; }
     }
 }
