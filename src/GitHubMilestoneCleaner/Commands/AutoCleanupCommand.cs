@@ -164,7 +164,7 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         }
 
         public string Title => BackingIssue.Title;
-        public int Number => BackingIssue.Number;
+        public long Number => BackingIssue.Number;
         public Issue BackingIssue { get; }
     }
 }
