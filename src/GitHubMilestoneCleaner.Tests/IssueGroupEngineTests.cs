@@ -11,7 +11,7 @@ public class IssueGroupEngineTests
     public class MockIssueWrapper(string title, int number) : IssueGroupEngine.IIssueWrapper
     {
         public string Title { get; } = title;
-        public int Number { get; } = number;
+        public long Number { get; } = number;
         public Issue BackingIssue { get; } = new();
     }
 
