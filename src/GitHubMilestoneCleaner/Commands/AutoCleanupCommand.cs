@@ -34,10 +34,24 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         [Description("The comment to add to issues that are removed from the milestone, if the issue is on the first level of the issue-tree.")]
         [CommandOption("-i|--topIssueComment")]
         public string? TopIssueComment { get; set; }
+        
+        [Description("Milestone to clean.")]
+        [CommandOption("-m|--milestone")] 
+        public string Milestone { get; set; } = string.Empty;
+        
+        [Description("Include closed milestones. Default is to search only in open milestones.")]
+        [CommandOption("-c|--closed")]
+        [DefaultValue(false)]
+        public bool SearchClosedMilestones { get; set; }
     }
 
     public override ValidationResult Validate(CommandContext context, Settings settings)
     {
+        if (string.IsNullOrEmpty(settings.Milestone))
+        {
+            return ValidationResult.Error("Milestone is required.");
+        }
+        
         return CommonCommandSettings.Validate(context, settings);
     }
 

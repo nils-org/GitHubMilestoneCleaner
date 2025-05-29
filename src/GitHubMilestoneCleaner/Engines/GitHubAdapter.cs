@@ -104,4 +104,11 @@ public class GitHubAdapter
         var name = GetType().Assembly.GetName();
         return $"{name.Name}-{name.Version}";
     }
+
+    public async Task MoveToMilestone(Repository repo, Issue issue, Milestone destination)
+    {
+        var update = issue.ToUpdate();
+        update.Milestone = destination.Number;
+        await _client.WithRetry(c => c.Issue.Update(repo.Id, issue.Number, update));
+    }
 }

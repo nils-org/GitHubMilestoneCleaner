@@ -9,11 +9,13 @@ app.Configure(c =>
         {
             AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
             return -99;
-        })
-        .AddCommand<CleanVersionBumpsCommand>("version-bumps")
+        });
+    c.AddCommand<CleanVersionBumpsCommand>("version-bumps")
         .WithAlias("versionbumps")
         .WithDescription(
-            "Cleans multiple version bumps per library as are created by dependabot or renovate.");
+            "Cleans multiple version bumps per library, as they are created by dependabot or renovate.");
+    c.AddCommand<MoveContentsCommand>("move")
+        .WithDescription("Moves all issues/PRs between milestones.");
 #if DEBUG
     c.ValidateExamples();
 #endif
