@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GitHubMilestoneCleaner.Engines;
 using GitHubMilestoneCleaner.Extension;
@@ -55,7 +56,7 @@ internal sealed class CleanVersionBumpsCommand : AsyncCommand<CleanVersionBumpsC
         return CommonCommandSettings.Validate(context, settings);
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var adapter = new GitHubAdapter(settings.Token);
         Repository repo;
