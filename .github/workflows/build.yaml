@@ -45,7 +45,7 @@ jobs:
       - name: Fetch all tags and branches
         run: git fetch --prune --unshallow
       - name: Setup .NET
-        uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: |
             2.1
